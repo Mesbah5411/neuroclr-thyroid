@@ -1,0 +1,15 @@
+model,probability_type,brier,top_label_ece,classwise_ece,notebook_output_matches,manuscript_matches,raw_probability_check
+"1. Untuned LightGBM (Base-48, No-Resample)",Unadjusted,0.07754618528282975,0.025040484903161013,0.012082983966632623,True,True,matrix not archived
+"2. Untuned XGBoost  (Base-48, No-Resample)",Unadjusted,0.08266447648564289,0.023541020848534357,0.012171783529052686,True,True,matrix not archived
+"3. Tuned LightGBM   (Base-48, Single Fit)",Unadjusted,0.08015890308582035,0.01370238749005722,0.009064157500454629,True,True,matrix not archived
+"4. Tuned LightGBM   (Base-48, Bagged)",Unadjusted,0.07689961344008296,0.01040823221792788,0.009417793235274842,True,True,matrix not archived
+"5. Tuned LightGBM   (FE:ON,   Single Fit)",Unadjusted,0.07800863760307937,0.014490996256799685,0.009189049719188946,True,True,matrix not archived
+"6. Tuned LightGBM   (FE:ON,   Bagged)",Unadjusted,0.07692638760698559,0.013875079680262872,0.009457601963317594,True,True,matched
+"7. Tuned XGBoost    (FE:ON,   Bagged)",Unadjusted,0.0910622613306004,0.02096834430059018,0.011389979101719303,True,True,matrix not archived
+8. H3: Aligned Simplex Neuro-Booster (Bagged),Unadjusted,0.08007022878366907,0.012466609474207191,0.01044929592929539,True,True,matrix not archived
+9. H1: Simplex Voting Base (F01),Unadjusted,0.07557360029289728,0.010432639238740398,0.008844500499325883,True,True,matrix not archived
+10. H2: Plain Tuned LR Stack (F05),Unadjusted,0.07824844635592305,0.010199716570314248,0.008782328241639853,True,True,matched
+11. H4 Base: NeuroCLR Only (F09),Unadjusted,0.0719017795149198,0.01518425851225452,0.009063916307515645,True,True,matched
+12. H2+: Std LR + Pairwise + Tau (F08),Adjusted*,0.07826909518400947,0.017573970726550456,0.009067333781660292,True,True,matrix not archived
+13. H4 (FE:OFF): NeuroCLR+PW+Tau (Base-48),Adjusted*,0.07149565634295146,0.011400203044690383,0.007352533432690503,True,True,matrix not archived
+"14. H4 Primary: NeuroCLR+PW+Tau (F12, FE:ON)",Adjusted*,0.07234400301258952,0.015936724537745143,0.008556304018578927,True,True,matrix not archived

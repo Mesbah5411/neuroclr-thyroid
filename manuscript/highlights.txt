@@ -1,0 +1,5 @@
+CLR stacking tested against probability-only stacking on 9,162 thyroid records
+Paired macro-F1 intervals included zero against both comparators
+Higher balanced accuracy was a secondary finding requiring replication
+Code S accounted for 63 of 90 treatment-group records misclassified as normal
+A post hoc cutoff deferred 67 test records containing 30 of the 66 errors

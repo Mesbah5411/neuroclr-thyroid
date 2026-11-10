@@ -1,0 +1,7 @@
+Using predictions from E:\Research\Juraiya\outputs\data\direct_neuroclr_predictions.npz
+                                         comparison            metric  point_difference  bootstrap_mean  ci_lower  ci_upper  resamples
+Unadjusted NeuroCLR minus Probability-only stacking          Macro-F1          0.006072        0.006137 -0.003445  0.017588       1000
+Unadjusted NeuroCLR minus Probability-only stacking Balanced accuracy          0.011093        0.011229  0.001614  0.021964       1000
+ Unadjusted NeuroCLR minus Enriched bagged LightGBM          Macro-F1          0.015894        0.015714 -0.002344  0.036157       1000
+ Unadjusted NeuroCLR minus Enriched bagged LightGBM Balanced accuracy          0.028083        0.027513  0.007668  0.051424       1000
+{'total': 1375, 'total_errors': 66, 'deferred': 67, 'deferred_errors': 30, 'retained_errors': 36, 'error_capture': 0.45454545454545453, 'deferred_error_rate': 0.44776119402985076}

@@ -1,0 +1,184 @@
+\section{Results}
+\label{sec:results}
+
+\subsection{Held-out classification performance}
+
+Table~\ref{tab:test_classification} summarizes the held-out evaluation on 1{,}375 records. Unadjusted NeuroCLR achieved accuracy 0.9520, balanced accuracy 0.8945 (95\% bootstrap CI 0.8629--0.9247), and macro-F1 0.9000 (0.8709--0.9234). Its MCC was 0.8885 and macro one-versus-rest ROC-AUC was 0.9939. The accuracy corresponds to 1{,}309 correctly classified records and 66 errors.
+
+Unadjusted NeuroCLR had the highest observed macro-F1 among the unadjusted models. Probability-only stacking, which used the same experts, achieved a macro-F1 of 0.8940 and a balanced accuracy of 0.8834. Enriched, bagged LightGBM achieved 0.8842 and 0.8664, respectively. Section~\ref{subsec:paired_results} reports the paired differences. The stacking comparison evaluates the joint contribution of CLR coordinates and uncertainty features.
+
+We focused retrospectively on unadjusted NeuroCLR to examine the probability representation before applying decision adjustments. The original analysis designated the adjusted ensemble as primary. Test results for both configurations were available when we chose this reporting emphasis.
+
+The ranking depended on the metric. Bagged XGBoost had higher balanced accuracy (0.9014) than unadjusted NeuroCLR (0.8945), but lower macro-F1 (0.8834 versus 0.9000). Untuned LightGBM had slightly higher accuracy (0.9527). Across adjusted and unadjusted configurations, the Base-34 NeuroCLR variant with both decision adjustments attained the highest observed macro-F1 (0.9078). This contrast with enriched, unadjusted NeuroCLR is descriptive: it has no paired interval and changes both the feature set and the decision rule.
+
+\begin{table}[htbp]
+\centering
+\caption{Held-out classification results. Enriched denotes Base-34 plus 35 endocrine features. PW denotes pairwise correction; Tau denotes threshold scaling. The voting and stacking rows use enriched features unless Base-34 is specified. The final three rows are adjusted variants. Intervals are 95\% percentile bootstrap intervals for each model, not for paired differences.}
+\label{tab:test_classification}
+\begingroup
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}p{5.2cm}rrrl@{}}
+\toprule
+Configuration & Accuracy & Bal. acc. & Macro-F1 & 95\% CI \\
+\midrule
+Untuned LightGBM, Base-34 & 0.9527 & 0.8652 & 0.8871 & [0.8539--0.9156] \\
+Untuned XGBoost, Base-34 & 0.9462 & 0.8605 & 0.8821 & [0.8527--0.9096] \\
+Tuned LightGBM, Base-34, single & 0.9469 & 0.8539 & 0.8798 & [0.8476--0.9078] \\
+Tuned LightGBM, Base-34, bagged & 0.9484 & 0.8597 & 0.8861 & [0.8546--0.9127] \\
+Tuned LightGBM, enriched, single & 0.9491 & 0.8649 & 0.8847 & [0.8525--0.9129] \\
+Tuned LightGBM, enriched, bagged & 0.9484 & 0.8664 & 0.8842 & [0.8514--0.9136] \\
+Tuned XGBoost, enriched, bagged & 0.9396 & 0.9014 & 0.8834 & [0.8519--0.9094] \\
+Neural/LightGBM hybrid & 0.9484 & 0.8711 & 0.8916 & [0.8625--0.9186] \\
+Simplex voting & 0.9498 & 0.8843 & 0.8968 & [0.8692--0.9217] \\
+Probability-only stacking & 0.9476 & 0.8834 & 0.8940 & [0.8656--0.9197] \\
+NeuroCLR & 0.9520 & 0.8945 & 0.9000 & [0.8709--0.9234] \\
+\midrule
+Probability-only + PW + Tau & 0.9491 & 0.8838 & 0.8962 & [0.8672--0.9217] \\
+NeuroCLR + PW + Tau, Base-34 & 0.9549 & 0.8971 & 0.9078 & [0.8819--0.9302] \\
+NeuroCLR + PW + Tau & 0.9513 & 0.8929 & 0.8970 & [0.8679--0.9224] \\
+\bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+
+
+Figure~\ref{fig:results_benchmark} visualizes macro-F1 and its marginal bootstrap intervals for all configurations in Table~\ref{tab:test_classification}.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/results/benchmark_publication.png}
+\caption{Macro-F1 for all evaluated configurations on the held-out cohort. Horizontal bars show marginal 95\% bootstrap intervals. The horizontal axis spans 0.84 to 0.94. The emphasized point denotes unadjusted NeuroCLR. These intervals do not establish significance of paired differences.}
+\label{fig:results_benchmark}
+\end{figure}
+
+\subsection{Class-specific performance}
+
+Table~\ref{tab:test_per_class} compares unadjusted NeuroCLR with enriched, bagged LightGBM. Unadjusted NeuroCLR correctly classified 112/124 binding-protein and other records versus 108/124 for LightGBM (recall 0.903 versus 0.871). For hyperthyroid records, the corresponding counts were 31/36 versus 27/36 (0.861 versus 0.750), a gain of four correct classifications. Hypothyroid recall remained 0.980, and recall for the treatment-related and miscellaneous group remained 0.750. Recall among records labelled normal decreased slightly, from 0.981 to 0.978. The aggregate gain therefore did not represent a uniform improvement across groups.
+
+Unadjusted NeuroCLR missed 25 of the 100 treatment-related and miscellaneous records. With 36 hyperthyroid and 100 treatment-related and miscellaneous records, a single error changes estimated recall by 2.8 and 1.0 percentage points, respectively. As an exploratory summary, we averaged recall across the binding-protein and other, hyperthyroid, and treatment-related and miscellaneous groups. This average excludes the hypothyroid group. It was 0.8381 (95\% bootstrap interval 0.7873--0.8868) for unadjusted NeuroCLR and 0.7903 (0.7324--0.8497) for enriched, bagged LightGBM.
+
+\begin{table}[htbp]
+\centering
+\caption{Class-specific test results. P, R, and F1 denote precision, recall, and F1. LightGBM is the tuned, bagged comparator with enriched features. Values are rounded to three decimal places.}
+\label{tab:test_per_class}
+\begingroup
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{4.7cm}rrrrrrr@{}}
+\toprule
+& & \multicolumn{3}{c}{LightGBM} & \multicolumn{3}{c}{NeuroCLR} \\
+\cmidrule(lr){3-5}\cmidrule(l){6-8}
+Group & $n$ & P & R & F1 & P & R & F1 \\
+\midrule
+Binding-protein and other & 124 & 0.931 & 0.871 & 0.900 & 0.918 & 0.903 & 0.911 \\
+Hyperthyroid & 36 & 0.794 & 0.750 & 0.771 & 0.795 & 0.861 & 0.827 \\
+Hypothyroid & 100 & 0.990 & 0.980 & 0.985 & 0.990 & 0.980 & 0.985 \\
+Records labelled normal & 1015 & 0.960 & 0.981 & 0.971 & 0.965 & 0.978 & 0.972 \\
+Treatment-related and miscellaneous & 100 & 0.843 & 0.750 & 0.794 & 0.872 & 0.750 & 0.806 \\
+\bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+
+
+The confusion matrix shows where these errors occurred (Figure~\ref{fig:results_confusion}). Among the 25 misclassified treatment-related and miscellaneous records, unadjusted NeuroCLR assigned 23 to the normal group, one to the binding-protein and other group, and one to the hyperthyroid group.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/results/confusion_unadjusted.png}
+\caption{Held-out confusion matrices for unadjusted NeuroCLR with enriched features. The left panel shows counts and the right panel shows proportions within each recorded group. Rows indicate recorded groups and columns indicate predictions.}
+\label{fig:results_confusion}
+\end{figure}
+
+\subsection{Probability quality}
+
+Unadjusted NeuroCLR had the lowest Brier score among the unadjusted configurations in Table~\ref{tab:test_probability}: 0.0719, compared with 0.078248 for probability-only stacking and 0.0769 for enriched, bagged LightGBM. However, it did not minimize either calibration-error summary. Its top-label ECE was 0.0152, compared with 0.0102 for probability-only stacking, and its class-wise ECE was 0.0091, compared with 0.0088 for probability-only stacking. The Brier improvement therefore does not establish uniformly better calibration. Brier score measures overall probabilistic prediction error, whereas the binned ECE summaries assess different aspects of probability agreement.
+
+The adjusted Base-34 NeuroCLR variant had a Brier score of 0.0715 and class-wise ECE of 0.0074. These values belong to its adjusted probability matrix; they are not measurements of unadjusted NeuroCLR. No bootstrap intervals for differences in these probability-quality metrics were calculated.
+
+\begin{table}[htbp]
+\centering
+\caption{Probability-quality results on the test cohort. Lower values are preferable for all three measures. All rows use the same metric definitions and the probability matrix for the indicated configuration. The final three rows use adjusted probabilities. Brier scores are reported to six decimal places from the full-precision evaluation export, and expected calibration errors (ECE) to four.}
+\label{tab:test_probability}
+\begingroup
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}p{6.2cm}rrr@{}}
+\toprule
+Configuration & Brier & Top-label ECE & Class-wise ECE \\
+\midrule
+Untuned LightGBM, Base-34 & 0.077546 & 0.0250 & 0.0121 \\
+Untuned XGBoost, Base-34 & 0.082664 & 0.0235 & 0.0122 \\
+Tuned LightGBM, Base-34, single & 0.080159 & 0.0137 & 0.0091 \\
+Tuned LightGBM, Base-34, bagged & 0.076900 & 0.0104 & 0.0094 \\
+Tuned LightGBM, enriched, single & 0.078009 & 0.0145 & 0.0092 \\
+Tuned LightGBM, enriched, bagged & 0.076926 & 0.0139 & 0.0095 \\
+Tuned XGBoost, enriched, bagged & 0.091062 & 0.0210 & 0.0114 \\
+Neural/LightGBM hybrid & 0.080070 & 0.0125 & 0.0104 \\
+Simplex voting & 0.075574 & 0.0104 & 0.0088 \\
+Probability-only stacking & 0.078248 & 0.0102 & 0.0088 \\
+NeuroCLR & 0.071902 & 0.0152 & 0.0091 \\
+\midrule
+Probability-only + PW + Tau & 0.078269 & 0.0176 & 0.0091 \\
+NeuroCLR + PW + Tau, Base-34 & 0.071496 & 0.0114 & 0.0074 \\
+NeuroCLR + PW + Tau & 0.072344 & 0.0159 & 0.0086 \\
+\bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+
+\subsection{Paired comparisons and decision adjustments}
+\label{subsec:paired_results}
+
+Table~\ref{tab:paired} summarizes contrasts across the same held-out records.
+
+\begin{table}[htbp]
+\centering
+\caption{Paired differences on the held-out test records (first model minus second). Brackets give percentile 95\% intervals. The first two contrasts use observed differences and the remaining contrasts use mean bootstrap differences. The dash denotes a metric omitted from the direct comparison.}
+\label{tab:paired}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.28\linewidth}ccc@{}}
+\toprule
+Comparison & Macro-F1 & Balanced accuracy & Three-group recall \\
+\midrule
+NeuroCLR vs. probability-only stack & \shortstack{$0.0061$\\{\scriptsize [$-0.0034$, $0.0176$]}} & \shortstack{$0.0111$\\{\scriptsize [$0.0016$, $0.0220$]}} & -- \\
+NeuroCLR vs. bagged LightGBM & \shortstack{$0.0159$\\{\scriptsize [$-0.0023$, $0.0362$]}} & \shortstack{$0.0281$\\{\scriptsize [$0.0077$, $0.0514$]}} & -- \\
+\midrule
+Adjusted NeuroCLR vs. adjusted probability-only stack & \shortstack{$0.0008$\\{\scriptsize [$-0.0085$, $0.0097$]}} & \shortstack{$0.0092$\\{\scriptsize [$0.0002$, $0.0192$]}} & \shortstack{$0.0163$\\{\scriptsize [$0.0015$, $0.0327$]}} \\
+Adjusted NeuroCLR vs. bagged LightGBM & \shortstack{$0.0126$\\{\scriptsize [$-0.0048$, $0.0336$]}} & \shortstack{$0.0259$\\{\scriptsize [$0.0059$, $0.0499$]}} & \shortstack{$0.0441$\\{\scriptsize [$0.0111$, $0.0845$]}} \\
+Adjusted vs. unadjusted NeuroCLR & \shortstack{$-0.0032$\\{\scriptsize [$-0.0112$, $0.0000$]}} & \shortstack{$-0.0017$\\{\scriptsize [$-0.0054$, $0.0000$]}} & \shortstack{$-0.0028$\\{\scriptsize [$-0.0089$, $0.0000$]}} \\
+Enriched vs. base bagged LightGBM & \shortstack{$-0.0011$\\{\scriptsize [$-0.0252$, $0.0235$]}} & \shortstack{$0.0077$\\{\scriptsize [$-0.0231$, $0.0385$]}} & \shortstack{$0.0101$\\{\scriptsize [$-0.0414$, $0.0606$]}} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For unadjusted NeuroCLR, the observed macro-F1 difference was 0.0061 versus probability-only stacking (95\% paired CI $-0.0034$ to 0.0176) and 0.0159 versus enriched, bagged LightGBM ($-0.0023$ to 0.0362). Both intervals included zero. These comparisons did not establish an improvement on macro-F1, the cross-validation criterion used to tune the boosting models and logistic combiners.
+
+The corresponding balanced-accuracy differences were 0.0111 (95\% CI 0.0016 to 0.0220) and 0.0281 (0.0077 to 0.0514). Both lower bounds were positive, although the lower bound against probability-only stacking was close to zero. The intervals are unadjusted for multiple comparisons. We therefore interpret the balanced-accuracy differences as suggestive and specific to this cohort.
+
+The paired-bootstrap analysis compared adjusted NeuroCLR with adjusted probability-only stacking and enriched, bagged LightGBM. The mean bootstrap macro-F1 difference was 0.0008 (95\% CI $-0.0085$ to 0.0097) for adjusted NeuroCLR versus adjusted probability-only stacking and 0.0126 ($-0.0048$ to 0.0336) for adjusted NeuroCLR versus LightGBM. Both intervals included zero. For those same contrasts, balanced-accuracy differences were 0.0092 (0.0002--0.0192) and 0.0259 (0.0059--0.0499), while exploratory three-group mean-recall differences were 0.0163 (0.0015--0.0327) and 0.0441 (0.0111--0.0845). In both of these comparisons, NeuroCLR used pairwise correction and threshold scaling.
+
+Adding pairwise correction and threshold scaling to the enriched unadjusted ensemble reduced observed macro-F1 from 0.9000 to 0.8970. The mean paired bootstrap difference was $-0.0032$, with a 95\% interval of $-0.0112$ to 0.0000 when rounded to four decimal places. On enriched features, the adjustments did not improve observed macro-F1 and may have reduced it. Adding endocrine features to bagged LightGBM gave a mean macro-F1 difference of $-0.0011$ ($-0.0252$ to 0.0235). The feature comparison likewise showed no clear macro-F1 gain.
+
+\subsection{Exploratory confidence-based deferral}
+
+At the post hoc confidence cutoff of 0.640, unadjusted NeuroCLR deferred 67 of 1{,}375 test records (4.87\%), retaining 1{,}308 records (95.13\% coverage). Accuracy on retained records was 0.9725 and macro-F1 was 0.9384, compared with 0.9520 and 0.9000 when all records were classified. These retained-case scores describe a smaller, selectively chosen subset and are not directly comparable with full-coverage model rankings.
+
+Of the 66 full-coverage errors, 30 (45.5\%) occurred among the 67 deferred records. The error rate was 44.8\% in deferred records (30/67), compared with 2.8\% in retained records (36/1{,}308) and 4.8\% overall (66/1{,}375). This retrospective comparison does not measure the outcome of clinical review or the performance of a prospectively selected deferral rule. The operating point was chosen after inspecting test predictions and requires independent evaluation before use as a fixed policy.
+
+Figure~\ref{fig:results_deferral} shows the retained-case accuracy across the explored deferral levels.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth,keepaspectratio]{figures/results/unadjusted_deferral.png}
+\caption{Exploratory accuracy--deferral curve for unadjusted NeuroCLR. The marked point corresponds to 4.87\% deferral (67 records) and retained-case accuracy of 0.9725. The cutoff was selected post hoc. Deferral denotes exclusion from automated classification in this analysis; no clinician reviewed these records.}
+\label{fig:results_deferral}
+\end{figure}
+
+Additional ROC and precision--recall curves for unadjusted NeuroCLR are provided in \ref{app:performance_curves}.
+
+\subsection{Alternative target definitions}
+
+In five-fold development cross-validation, direct LightGBM classification achieved mean macro-F1 of 0.8879 on the five-group task and 0.8929 on the four-group task. On the same four-group target, the screening and subtyping cascade achieved mean macro-F1 of 0.8965, compared with 0.8929 for direct classification. The five- and four-group scores concern different targets. Fold variability and stage-specific results are given in \ref{app:implementation}.

@@ -1,0 +1,15 @@
+Table 5 | configuration | Brier | top-label ECE | class-wise ECE
+1. Untuned LightGBM (Base-48, No-Resample) | 0.077546 | 0.0250 | 0.0121
+2. Untuned XGBoost  (Base-48, No-Resample) | 0.082664 | 0.0235 | 0.0122
+3. Tuned LightGBM   (Base-48, Single Fit) | 0.080159 | 0.0137 | 0.0091
+4. Tuned LightGBM   (Base-48, Bagged) | 0.076900 | 0.0104 | 0.0094
+5. Tuned LightGBM   (FE:ON,   Single Fit) | 0.078009 | 0.0145 | 0.0092
+6. Tuned LightGBM   (FE:ON,   Bagged) | 0.076926 | 0.0139 | 0.0095
+7. Tuned XGBoost    (FE:ON,   Bagged) | 0.091062 | 0.0210 | 0.0114
+8. H3: Aligned Simplex Neuro-Booster (Bagged) | 0.080070 | 0.0125 | 0.0104
+9. H1: Simplex Voting Base (F01) | 0.075574 | 0.0104 | 0.0088
+10. H2: Plain Tuned LR Stack (F05) | 0.078248 | 0.0102 | 0.0088
+11. H4 Base: NeuroCLR Only (F09) | 0.071902 | 0.0152 | 0.0091
+12. H2+: Std LR + Pairwise + Tau (F08) | 0.078269 | 0.0176 | 0.0091
+13. H4 (FE:OFF): NeuroCLR+PW+Tau (Base-48) | 0.071496 | 0.0114 | 0.0074
+14. H4 Primary: NeuroCLR+PW+Tau (F12, FE:ON) | 0.072344 | 0.0159 | 0.0086
